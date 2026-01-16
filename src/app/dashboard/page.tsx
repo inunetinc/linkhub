@@ -705,7 +705,7 @@ function DashboardContent() {
       // Fallback to HTTP if socket is disconnected
       const token = localStorage.getItem('token');
       if (!token) return;
-      fetch(`${API_BASE_URL}/api/messages', {
+      fetch(`${API_BASE_URL}/api/messages`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1491,7 +1491,7 @@ function DashboardContent() {
           body: submitData,
         });
       } else {
-        response = await fetch(`${API_BASE_URL}/api/content-announcements', {
+        response = await fetch(`${API_BASE_URL}/api/content-announcements`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: submitData,
@@ -2948,7 +2948,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedYoutubeChannel || !youtubeToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch(`${API_BASE_URL}/api/youtube/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/youtube/channel`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3055,7 +3055,7 @@ function DashboardContent() {
                         if (!selectedFacebookPage || !facebookToken) return;
                         setFacebookLoading(true);
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch(`${API_BASE_URL}/api/facebook/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/facebook/channel`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3159,7 +3159,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedInstagramAccount || !instagramToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch(`${API_BASE_URL}/api/instagram/account', {
+                        const resp = await fetch(`${API_BASE_URL}/api/instagram/account`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3262,7 +3262,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedTwitterAccount || !twitterToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch(`${API_BASE_URL}/api/twitter/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/twitter/channel`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3365,7 +3365,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedTikTokAccount || !tiktokToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch(`${API_BASE_URL}/api/tiktok/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/tiktok/channel`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -4838,7 +4838,7 @@ function DashboardContent() {
           setSavingPayoutSettings(true);
           try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${API_BASE_URL}/api/payout-settings', {
+            const res = await fetch(`${API_BASE_URL}/api/payout-settings`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${token}`,
