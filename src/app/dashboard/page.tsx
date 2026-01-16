@@ -4802,7 +4802,7 @@ function DashboardContent() {
               fetch(`${API_BASE_URL}/api/payout-settings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
               }),
-              fetch(`${API_BASE_URL}/api/banks')
+              fetch(`${API_BASE_URL}/api/banks`)
             ]);
 
             if (settingsRes.ok) {
