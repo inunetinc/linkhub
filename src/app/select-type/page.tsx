@@ -236,8 +236,8 @@ function SelectTypeContent() {
 
       if (response.ok) {
         localStorage.setItem('userType', type.toLowerCase());
-        // Navigate to profile without token in URL
-        router.push('/profile');
+        // Navigate to profile with type parameter
+        router.push(`/profile?type=${type}`);
       } else {
         alert('Error updating user type');
       }
