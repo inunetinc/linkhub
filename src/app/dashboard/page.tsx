@@ -492,7 +492,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch(`${API_BASE_URL}/api/ad-requests', {
+      const response = await fetch(`${API_BASE_URL}/api/ad-requests`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -509,7 +509,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch(`${API_BASE_URL}/api/messages/conversations', {
+      const response = await fetch(`${API_BASE_URL}/api/messages/conversations`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -569,7 +569,7 @@ function DashboardContent() {
     if (!token) return;
     setLoadingCollabRequests(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests', {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) {
@@ -590,7 +590,7 @@ function DashboardContent() {
     if (!storedToken) return;
 
     try {
-      const countResponse = await fetch(`${API_BASE_URL}/api/collaboration-requests/count', {
+      const countResponse = await fetch(`${API_BASE_URL}/api/collaboration-requests/count`, {
         headers: { Authorization: `Bearer ${storedToken}` }
       });
       if (countResponse.ok) {
