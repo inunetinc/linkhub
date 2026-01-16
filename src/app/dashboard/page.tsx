@@ -4799,7 +4799,7 @@ function DashboardContent() {
           try {
             const token = localStorage.getItem('token');
             const [settingsRes, banksRes] = await Promise.all([
-              fetch(`${API_BASE_URL}/api/payout-settings', {
+              fetch(`${API_BASE_URL}/api/payout-settings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
               }),
               fetch(`${API_BASE_URL}/api/banks')
