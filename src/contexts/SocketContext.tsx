@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { API_BASE_URL } from '@/config/api';
 
 interface Message {
   id: string;
@@ -67,7 +68,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     if (!token) return;
 
     // Connect to Socket.IO server
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io(API_BASE_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
     });

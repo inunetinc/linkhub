@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from '../../home/Navbar';
 import Footer from '../../home/Footer';
 import { useParams } from 'next/navigation';
+import { API_BASE_URL } from '@/config/api';
 
 interface BlogPost {
   id: string;
@@ -53,7 +54,7 @@ export default function BlogPostPage() {
   const fetchPost = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/api/blog/${slug}`);
+      const res = await fetch(`${API_BASE_URL}/api/blog/${slug}`);
       if (!res.ok) {
         throw new Error('Post not found');
       }
@@ -208,7 +209,7 @@ export default function BlogPostPage() {
               className="aspect-[16/9] rounded-2xl overflow-hidden mb-10"
             >
               <img
-                src={`http://localhost:5000${post.coverImage}`}
+                src={`${API_BASE_URL}${post.coverImage}`}
                 alt={post.title}
                 className="w-full h-full object-cover"
               />

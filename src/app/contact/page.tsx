@@ -5,6 +5,7 @@ import { Mail, Clock } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Navbar from '../home/Navbar';
 import Footer from '../home/Footer';
+import { API_BASE_URL } from '@/config/api';
 
 const contactInfo = [
   {
@@ -36,7 +37,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/contact', {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

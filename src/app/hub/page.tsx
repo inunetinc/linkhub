@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Filter, MapPin, TrendingUp, Users, X, Globe, Briefcase, ExternalLink, Youtube, Instagram, Twitter, Facebook, Twitch, Music, MessageSquare, Link2, DollarSign, Clock, Check, ShoppingCart, Calendar, Video, Plus, Send, Image, Upload, FileText, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/config/api';
 
 const platformEmojis: Record<string, string> = {
   YOUTUBE: '📺',
@@ -388,7 +389,7 @@ function MarketplaceHubContent() {
     if (!token) return;
     setLoadingAnnouncements(true);
     try {
-      const response = await fetch('http://localhost:5000/api/content-announcements', {
+      const response = await fetch(`${API_BASE_URL}/api/content-announcements`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -417,7 +418,7 @@ function MarketplaceHubContent() {
     let hasExistingConversation = false;
     try {
       const storedToken = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/messages/${brand.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/messages/${brand.id}`, {
         headers: { 'Authorization': `Bearer ${storedToken}` }
       });
       if (response.ok) {
@@ -482,7 +483,7 @@ function MarketplaceHubContent() {
       if (filters?.maxReach) queryParams.append('maxReach', filters.maxReach);
 
       const response = await fetch(
-        `http://localhost:5000/api/marketplace/creators?${queryParams.toString()}`,
+        `${API_BASE_URL}/api/marketplace/creators?${queryParams.toString()}`,
         {
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -509,7 +510,7 @@ function MarketplaceHubContent() {
       if (filters?.search) queryParams.append('search', filters.search);
 
       const response = await fetch(
-        `http://localhost:5000/api/marketplace/brands?${queryParams.toString()}`,
+        `${API_BASE_URL}/api/marketplace/brands?${queryParams.toString()}`,
         {
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -916,7 +917,7 @@ function CreatorCard({ creator, userType, onViewProfile, onConnect }: { creator:
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
             {creator.avatar ? (
-              <img src={`http://localhost:5000${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
+              <img src={`${API_BASE_URL}${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
             ) : (
               <span className="text-2xl font-semibold text-gray-400">{creator.name[0]}</span>
             )}
@@ -1013,7 +1014,7 @@ function BrandCard({ brand, onViewProfile, onConnect }: { brand: Brand; onViewPr
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex flex-col items-center">
         <div className="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center overflow-hidden mb-4">
           {brand.avatar ? (
-            <img src={`http://localhost:5000${brand.avatar}`} alt={brand.name} className="w-full h-full object-cover" />
+            <img src={`${API_BASE_URL}${brand.avatar}`} alt={brand.name} className="w-full h-full object-cover" />
           ) : (
             <Briefcase className="w-10 h-10 text-gray-400" />
           )}
@@ -1105,7 +1106,7 @@ function BrandProfileModal({ brand, onClose, onConnect }: { brand: Brand; onClos
           <div className="flex flex-col items-center mb-6">
             <div className="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden mb-4">
               {brand.avatar ? (
-                <img src={`http://localhost:5000${brand.avatar}`} alt={brand.name} className="w-full h-full object-cover" />
+                <img src={`${API_BASE_URL}${brand.avatar}`} alt={brand.name} className="w-full h-full object-cover" />
               ) : (
                 <Briefcase className="w-12 h-12 text-gray-400" />
               )}
@@ -1201,7 +1202,7 @@ function CreatorProfileModal({ creator, onClose }: { creator: Creator; onClose: 
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 ring-4 ring-gray-50">
               {creator.avatar ? (
-                <img src={`http://localhost:5000${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
+                <img src={`${API_BASE_URL}${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-3xl font-bold text-gray-400">{creator.name[0]}</span>
               )}
@@ -1324,7 +1325,7 @@ function ConnectModal({ creator, filterPlatforms = [], filterChannelIds = [], an
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch('http://localhost:5000/api/ads', {
+        const response = await fetch(`${API_BASE_URL}/api/ads`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -1501,7 +1502,7 @@ Best regards`;
 
       const message = generateCollabMessage();
 
-      const response = await fetch('http://localhost:5000/api/collaboration-requests', {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1566,7 +1567,7 @@ Best regards`;
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
                 {creator.avatar ? (
-                  <img src={`http://localhost:5000${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
+                  <img src={`${API_BASE_URL}${creator.avatar}`} alt={creator.name} className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-lg font-semibold text-gray-400">{creator.name[0]}</span>
                 )}
@@ -1694,7 +1695,7 @@ Best regards`;
                             {/* Thumbnail */}
                             <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
                               {ad.images?.[0] ? (
-                                <img src={`http://localhost:5000${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
+                                <img src={`${API_BASE_URL}${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
                               ) : ad.videos?.[0] ? (
                                 <div className="w-full h-full bg-gray-900 flex items-center justify-center">
                                   <Video className="w-5 h-5 text-white" />
@@ -1785,7 +1786,7 @@ Best regards`;
                     >
                       <div className="w-14 h-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
                         {ad.images?.[0] ? (
-                          <img src={`http://localhost:5000${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
+                          <img src={`${API_BASE_URL}${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
                         ) : ad.videos?.[0] ? (
                           <div className="w-full h-full bg-gray-900 flex items-center justify-center">
                             <Video className="w-6 h-6 text-white" />
@@ -2118,7 +2119,7 @@ function AnnouncementCard({ announcement, onConnect }: { announcement: ContentAn
       <div className="aspect-video bg-gray-100 relative">
         {announcement.thumbnail ? (
           <img
-            src={`http://localhost:5000${announcement.thumbnail}`}
+            src={`${API_BASE_URL}${announcement.thumbnail}`}
             alt={announcement.title}
             className="w-full h-full object-cover"
           />
@@ -2162,7 +2163,7 @@ function AnnouncementCard({ announcement, onConnect }: { announcement: ContentAn
             <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
               {announcement.creator.avatar ? (
                 <img
-                  src={`http://localhost:5000${announcement.creator.avatar}`}
+                  src={`${API_BASE_URL}${announcement.creator.avatar}`}
                   alt={announcement.creator.name}
                   className="w-full h-full object-cover"
                 />

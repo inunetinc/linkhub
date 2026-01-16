@@ -20,6 +20,7 @@ import {
   CheckCircle2,
   ArrowRight
 } from 'lucide-react';
+import { API_BASE_URL } from '@/config/api';
 
 const NICHES = [
   { value: 'TECH', label: 'Tech', category: 'Premium' },
@@ -171,7 +172,7 @@ function ProfileSetupContent() {
       });
       if (logoFile) formDataToSend.append('logo', logoFile);
 
-      const response = await fetch('http://localhost:5000/api/user/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${activeToken}` },
         body: formDataToSend

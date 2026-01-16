@@ -27,6 +27,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { useSocket } from '@/contexts/SocketContext';
+import { API_BASE_URL } from '@/config/api';
 
 function decodeJWT(token: string) {
   try {
@@ -60,7 +61,7 @@ export default function DashboardLayout({ children, activeView = 'home', onViewC
   // Fetch collaboration request count (PENDING + PAID) and sync with socket context
   const fetchRequestCount = async (storedToken: string) => {
     try {
-      const response = await fetch('http://localhost:5000/api/collaboration-requests/count', {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/count`, {
         headers: { Authorization: `Bearer ${storedToken}` }
       });
       if (response.ok) {

@@ -54,6 +54,7 @@ import {
 } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useSocket } from '@/contexts/SocketContext';
+import { API_BASE_URL } from '@/config/api';
 
 function decodeJWT(token: string) {
   try {
@@ -232,7 +233,7 @@ function DashboardContent() {
 
       const exchangeAuthCode = async () => {
         try {
-          const response = await fetch('http://localhost:5000/auth/exchange', {
+          const response = await fetch(`${API_BASE_URL}/auth/exchange`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: authCode }),
@@ -305,7 +306,7 @@ function DashboardContent() {
       const exchangeToken = async () => {
         try {
           // Exchange the code for the actual token via secure POST request
-          const response = await fetch(`http://localhost:5000/api/${oauthPlatform}/oauth/exchange`, {
+          const response = await fetch(`${API_BASE_URL}/api/${oauthPlatform}/oauth/exchange`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: oauthCode }),
@@ -341,7 +342,7 @@ function DashboardContent() {
               setYoutubeToken(platformToken);
               setYoutubeLoading(true);
               try {
-                const ytResponse = await fetch('http://localhost:5000/api/youtube/channels', {
+                const ytResponse = await fetch(`${API_BASE_URL}/api/youtube/channels`, {
                   headers: { Authorization: `Bearer ${platformToken}` },
                 });
                 if (ytResponse.ok) {
@@ -398,7 +399,7 @@ function DashboardContent() {
               // Twitch auto-saves the channel
               try {
                 const localUserToken = localStorage.getItem('token');
-                const resp = await fetch('http://localhost:5000/api/twitch/channel', {
+                const resp = await fetch(`${API_BASE_URL}/api/twitch/channel`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -442,7 +443,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/user/channels`, {
+      const response = await fetch(`${API_BASE_URL}/api/user/channels`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -474,7 +475,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:5000/api/ads', {
+      const response = await fetch(`${API_BASE_URL}/api/ads`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -491,7 +492,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:5000/api/ad-requests', {
+      const response = await fetch(`${API_BASE_URL}/api/ad-requests', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -508,7 +509,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:5000/api/messages/conversations', {
+      const response = await fetch(`${API_BASE_URL}/api/messages/conversations', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -526,7 +527,7 @@ function DashboardContent() {
     if (!token || !user?.id) return;
     try {
       // Use creator-specific endpoint to get ALL announcements (including filled ones)
-      const response = await fetch(`http://localhost:5000/api/content-announcements/creator/${user.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/content-announcements/creator/${user.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) {
@@ -536,7 +537,7 @@ function DashboardContent() {
           new Date(announcement.scheduledAt) < now && announcement.status === 'ACTIVE'
         );
         for (const announcement of announcementsToArchive) {
-          await fetch(`http://localhost:5000/api/content-announcements/${announcement.id}/status`, {
+          await fetch(`${API_BASE_URL}/api/content-announcements/${announcement.id}/status`, {
             method: 'PATCH',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -546,7 +547,7 @@ function DashboardContent() {
           });
         }
         if (announcementsToArchive.length > 0) {
-          const updatedResponse = await fetch(`http://localhost:5000/api/content-announcements/creator/${user.id}`, {
+          const updatedResponse = await fetch(`${API_BASE_URL}/api/content-announcements/creator/${user.id}`, {
             headers: { 'Authorization': `Bearer ${token}` },
           });
           if (updatedResponse.ok) {
@@ -568,7 +569,7 @@ function DashboardContent() {
     if (!token) return;
     setLoadingCollabRequests(true);
     try {
-      const response = await fetch('http://localhost:5000/api/collaboration-requests', {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) {
@@ -589,7 +590,7 @@ function DashboardContent() {
     if (!storedToken) return;
 
     try {
-      const countResponse = await fetch('http://localhost:5000/api/collaboration-requests/count', {
+      const countResponse = await fetch(`${API_BASE_URL}/api/collaboration-requests/count', {
         headers: { Authorization: `Bearer ${storedToken}` }
       });
       if (countResponse.ok) {
@@ -612,7 +613,7 @@ function DashboardContent() {
     ));
 
     try {
-      const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -647,7 +648,7 @@ function DashboardContent() {
       if (!campaign) return;
 
       // Initialize payment with Paystack (redirect flow)
-      const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/pay/initialize`, {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/pay/initialize`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -678,7 +679,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/messages/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -704,7 +705,7 @@ function DashboardContent() {
       // Fallback to HTTP if socket is disconnected
       const token = localStorage.getItem('token');
       if (!token) return;
-      fetch('http://localhost:5000/api/messages', {
+      fetch(`${API_BASE_URL}/api/messages', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -735,7 +736,7 @@ function DashboardContent() {
     setIsRemovingChannel(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/user/channels/${channelToRemove.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/user/channels/${channelToRemove.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -777,7 +778,7 @@ function DashboardContent() {
     if (!storedToken) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/mark-downloaded`, {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/mark-downloaded`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${storedToken}`,
@@ -872,10 +873,10 @@ function DashboardContent() {
 
     const allMedia: string[] = [];
     if (selectedCollabRequest.ad.images) {
-      allMedia.push(...selectedCollabRequest.ad.images.map((img: string) => `http://localhost:5000${img}`));
+      allMedia.push(...selectedCollabRequest.ad.images.map((img: string) => `${API_BASE_URL}${img}`));
     }
     if (selectedCollabRequest.ad.videos) {
-      allMedia.push(...selectedCollabRequest.ad.videos.map((vid: string) => `http://localhost:5000${vid}`));
+      allMedia.push(...selectedCollabRequest.ad.videos.map((vid: string) => `${API_BASE_URL}${vid}`));
     }
 
     if (allMedia.length === 0) {
@@ -1063,7 +1064,7 @@ function DashboardContent() {
     if (verify === 'true' && reference && requestId && token) {
       const verifyPayment = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/pay/verify`, {
+          const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/pay/verify`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -1214,7 +1215,7 @@ function DashboardContent() {
           });
         }
 
-        response = await fetch(`http://localhost:5000/api/ads/${editingAd.id}`, {
+        response = await fetch(`${API_BASE_URL}/api/ads/${editingAd.id}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
           body: submitData
@@ -1228,7 +1229,7 @@ function DashboardContent() {
           submitData.append('videos', file);
         });
 
-        response = await fetch('http://localhost:5000/api/ads', {
+        response = await fetch(`${API_BASE_URL}/api/ads`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: submitData
@@ -1273,7 +1274,7 @@ function DashboardContent() {
     if (!confirm('Are you sure you want to delete this ad?')) return;
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/ads/${adId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/ads/${adId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -1380,7 +1381,7 @@ function DashboardContent() {
     const token = localStorage.getItem('token');
     let latestAnnouncement = announcement;
     try {
-      const response = await fetch(`http://localhost:5000/api/content-announcements/${announcement.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/content-announcements/${announcement.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -1392,7 +1393,7 @@ function DashboardContent() {
     if (latestAnnouncement.thumbnail) {
       const url = latestAnnouncement.thumbnail.startsWith('http')
         ? latestAnnouncement.thumbnail
-        : `http://localhost:5000${latestAnnouncement.thumbnail}`;
+        : `${API_BASE_URL}${latestAnnouncement.thumbnail}`;
       setThumbnailPreview(url);
     } else {
       setThumbnailPreview(null);
@@ -1436,7 +1437,7 @@ function DashboardContent() {
     setIsDeleting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/content-announcements/${deleteAnnouncementId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/content-announcements/${deleteAnnouncementId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1484,13 +1485,13 @@ function DashboardContent() {
       const token = localStorage.getItem('token');
       let response;
       if (editingAnnouncement) {
-        response = await fetch(`http://localhost:5000/api/content-announcements/${editingAnnouncement.id}`, {
+        response = await fetch(`${API_BASE_URL}/api/content-announcements/${editingAnnouncement.id}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
           body: submitData,
         });
       } else {
-        response = await fetch('http://localhost:5000/api/content-announcements', {
+        response = await fetch(`${API_BASE_URL}/api/content-announcements', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: submitData,
@@ -1675,7 +1676,7 @@ function DashboardContent() {
                         >
                           <div className="w-14 h-10 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                             {ad.images?.[0] ? (
-                              <img src={`http://localhost:5000${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
+                              <img src={`${API_BASE_URL}${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
                             ) : (
                               <FileVideo className="w-5 h-5 text-gray-400" />
                             )}
@@ -1745,7 +1746,7 @@ function DashboardContent() {
                           >
                             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                               {campaign.creator?.avatar ? (
-                                <img src={`http://localhost:5000${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                                <img src={`${API_BASE_URL}${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <span className="text-sm font-medium text-green-700">{campaign.creator?.name?.[0] || '?'}</span>
                               )}
@@ -1805,7 +1806,7 @@ function DashboardContent() {
                         >
                           <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                             {request.creator?.avatar ? (
-                              <img src={`http://localhost:5000${request.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                              <img src={`${API_BASE_URL}${request.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                             ) : (
                               <span className="text-sm font-medium text-yellow-700">{request.creator?.name?.[0] || '?'}</span>
                             )}
@@ -1867,7 +1868,7 @@ function DashboardContent() {
                           >
                             <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                               {conv.partner?.avatar ? (
-                                <img src={`http://localhost:5000${conv.partner.avatar}`} alt="" className="w-full h-full object-cover" />
+                                <img src={`${API_BASE_URL}${conv.partner.avatar}`} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <span className="text-sm font-medium text-gray-600">{conv.partner?.name?.[0] || '?'}</span>
                               )}
@@ -2127,7 +2128,7 @@ function DashboardContent() {
                         <div className="flex items-start gap-3">
                           {announcement.thumbnail ? (
                             <img
-                              src={`http://localhost:5000${announcement.thumbnail}`}
+                              src={`${API_BASE_URL}${announcement.thumbnail}`}
                               alt=""
                               className="w-14 h-10 rounded-lg object-cover"
                             />
@@ -2200,7 +2201,7 @@ function DashboardContent() {
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                             {conv.partner?.avatar ? (
-                              <img src={`http://localhost:5000${conv.partner.avatar}`} alt="" className="w-full h-full object-cover" />
+                              <img src={`${API_BASE_URL}${conv.partner.avatar}`} alt="" className="w-full h-full object-cover" />
                             ) : (
                               <span className="text-sm font-medium text-gray-600">{conv.partner?.name?.[0] || '?'}</span>
                             )}
@@ -2594,7 +2595,7 @@ function DashboardContent() {
                         <div className="relative h-40 bg-gradient-to-br from-gray-100 to-gray-50 overflow-hidden">
                           {announcement.thumbnail ? (
                             <img
-                              src={`http://localhost:5000${announcement.thumbnail}`}
+                              src={`${API_BASE_URL}${announcement.thumbnail}`}
                               alt={announcement.title}
                               className="w-full h-full object-cover object-center"
                             />
@@ -2854,17 +2855,17 @@ function DashboardContent() {
                         return;
                       }
                       if (value === 'YOUTUBE') {
-                        window.location.href = `http://localhost:5000/api/youtube/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/youtube/oauth/start?token=${currentToken}`;
                       } else if (value === 'TWITCH') {
-                        window.location.href = `http://localhost:5000/api/twitch/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/twitch/oauth/start?token=${currentToken}`;
                       } else if (value === 'FACEBOOK') {
-                        window.location.href = `http://localhost:5000/api/facebook/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/facebook/oauth/start?token=${currentToken}`;
                       } else if (value === 'INSTAGRAM') {
-                        window.location.href = `http://localhost:5000/api/instagram/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/instagram/oauth/start?token=${currentToken}`;
                       } else if (value === 'TWITTER') {
-                        window.location.href = `http://localhost:5000/api/twitter/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/twitter/oauth/start?token=${currentToken}`;
                       } else if (value === 'TIKTOK') {
-                        window.location.href = `http://localhost:5000/api/tiktok/oauth/start?token=${currentToken}`;
+                        window.location.href = `${API_BASE_URL}/api/tiktok/oauth/start?token=${currentToken}`;
                       } else {
                         setAddingPlatform(value);
                       }
@@ -2947,7 +2948,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedYoutubeChannel || !youtubeToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch('http://localhost:5000/api/youtube/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/youtube/channel', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3054,7 +3055,7 @@ function DashboardContent() {
                         if (!selectedFacebookPage || !facebookToken) return;
                         setFacebookLoading(true);
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch('http://localhost:5000/api/facebook/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/facebook/channel', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3158,7 +3159,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedInstagramAccount || !instagramToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch('http://localhost:5000/api/instagram/account', {
+                        const resp = await fetch(`${API_BASE_URL}/api/instagram/account', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3261,7 +3262,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedTwitterAccount || !twitterToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch('http://localhost:5000/api/twitter/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/twitter/channel', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3364,7 +3365,7 @@ function DashboardContent() {
                       onClick={async () => {
                         if (!selectedTikTokAccount || !tiktokToken) return;
                         const userToken = localStorage.getItem('token');
-                        const resp = await fetch('http://localhost:5000/api/tiktok/channel', {
+                        const resp = await fetch(`${API_BASE_URL}/api/tiktok/channel', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -3451,7 +3452,7 @@ function DashboardContent() {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
                     {selectedCollabRequest.creator?.avatar ? (
-                      <img src={`http://localhost:5000${selectedCollabRequest.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                      <img src={`${API_BASE_URL}${selectedCollabRequest.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg font-semibold text-gray-400">{selectedCollabRequest.creator?.name?.[0]}</span>
                     )}
@@ -3495,7 +3496,7 @@ function DashboardContent() {
                         onClick={async () => {
                           try {
                             const token = localStorage.getItem('token');
-                            const response = await fetch(`http://localhost:5000/api/collaboration-requests/${selectedCollabRequest.id}/attach-ad`, {
+                            const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${selectedCollabRequest.id}/attach-ad`, {
                               method: 'PUT',
                               headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -3519,9 +3520,9 @@ function DashboardContent() {
                           {/* Thumbnail */}
                           <div className="w-20 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                             {ad.images?.[0] ? (
-                              <img src={`http://localhost:5000${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
+                              <img src={`${API_BASE_URL}${ad.images[0]}`} alt="" className="w-full h-full object-cover" />
                             ) : ad.videos?.[0] ? (
-                              <video src={`http://localhost:5000${ad.videos[0]}`} className="w-full h-full object-cover" />
+                              <video src={`${API_BASE_URL}${ad.videos[0]}`} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <FileVideo className="w-6 h-6 text-gray-400" />
@@ -3891,7 +3892,7 @@ function DashboardContent() {
                               <GripVertical className="w-4 h-4 text-gray-400" />
                             </div>
                             <img
-                              src={item.type === 'existing' ? `http://localhost:5000${item.src}` : item.src}
+                              src={item.type === 'existing' ? `${API_BASE_URL}${item.src}` : item.src}
                               alt=""
                               className={`w-20 h-14 object-cover rounded-lg ${item.type === 'new' ? 'border-2 border-dashed border-green-400' : 'border border-gray-200'}`}
                             />
@@ -3998,7 +3999,7 @@ function DashboardContent() {
                               <GripVertical className="w-4 h-4 text-gray-400" />
                             </div>
                             <video
-                              src={item.type === 'existing' ? `http://localhost:5000${item.src}` : item.src}
+                              src={item.type === 'existing' ? `${API_BASE_URL}${item.src}` : item.src}
                               className={`w-32 h-20 object-cover rounded-lg ${item.type === 'new' ? 'border-2 border-dashed border-green-400' : 'border border-gray-200'}`}
                             />
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -4087,13 +4088,13 @@ function DashboardContent() {
                     <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-50 relative overflow-hidden">
                       {ad.images?.[0] ? (
                         <img
-                          src={`http://localhost:5000${ad.images[0]}`}
+                          src={`${API_BASE_URL}${ad.images[0]}`}
                           alt={ad.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : ad.videos?.[0] ? (
                         <video
-                          src={`http://localhost:5000${ad.videos[0]}`}
+                          src={`${API_BASE_URL}${ad.videos[0]}`}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -4302,7 +4303,7 @@ function DashboardContent() {
                                   <div className="relative">
                                     <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center overflow-hidden">
                                       {campaign.creator?.avatar ? (
-                                        <img src={`http://localhost:5000${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                                        <img src={`${API_BASE_URL}${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                                       ) : (
                                         <span className="text-xl font-bold text-gray-400">{campaign.creator?.name?.[0]}</span>
                                       )}
@@ -4332,7 +4333,7 @@ function DashboardContent() {
                                   >
                                     <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                                       {campaign.ad.images?.length > 0 ? (
-                                        <img src={`http://localhost:5000${campaign.ad.images[0]}`} alt="" className="w-full h-full object-cover" />
+                                        <img src={`${API_BASE_URL}${campaign.ad.images[0]}`} alt="" className="w-full h-full object-cover" />
                                       ) : (
                                         <FileVideo className="w-5 h-5 text-gray-400" />
                                       )}
@@ -4419,7 +4420,7 @@ function DashboardContent() {
                                   <div className="relative">
                                     <div className="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
                                       {campaign.creator?.avatar ? (
-                                        <img src={`http://localhost:5000${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                                        <img src={`${API_BASE_URL}${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                                       ) : (
                                         <span className="text-lg font-bold text-gray-400">{campaign.creator?.name?.[0]}</span>
                                       )}
@@ -4543,7 +4544,7 @@ function DashboardContent() {
                             <div className="flex items-center gap-3 mb-4">
                               <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
                                 {campaign.creator?.avatar ? (
-                                  <img src={`http://localhost:5000${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                                  <img src={`${API_BASE_URL}${campaign.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                                 ) : (
                                   <span className="text-gray-600 font-semibold">{campaign.creator?.name?.[0]}</span>
                                 )}
@@ -4798,10 +4799,10 @@ function DashboardContent() {
           try {
             const token = localStorage.getItem('token');
             const [settingsRes, banksRes] = await Promise.all([
-              fetch('http://localhost:5000/api/payout-settings', {
+              fetch(`${API_BASE_URL}/api/payout-settings', {
                 headers: { 'Authorization': `Bearer ${token}` }
               }),
-              fetch('http://localhost:5000/api/banks')
+              fetch(`${API_BASE_URL}/api/banks')
             ]);
 
             if (settingsRes.ok) {
@@ -4837,7 +4838,7 @@ function DashboardContent() {
           setSavingPayoutSettings(true);
           try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/payout-settings', {
+            const res = await fetch(`${API_BASE_URL}/api/payout-settings', {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -5206,7 +5207,7 @@ function DashboardContent() {
                               <div className="relative">
                                 <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden">
                                   {conv.partner.avatar ? (
-                                    <img src={conv.partner.avatar.startsWith('http') ? conv.partner.avatar : `http://localhost:5000${conv.partner.avatar}`} alt="" className="w-10 h-10 rounded-full object-cover" />
+                                    <img src={conv.partner.avatar.startsWith('http') ? conv.partner.avatar : `${API_BASE_URL}${conv.partner.avatar}`} alt="" className="w-10 h-10 rounded-full object-cover" />
                                   ) : (
                                     <span className="text-gray-600 font-medium text-sm">{conv.partner.name?.charAt(0)}</span>
                                   )}
@@ -5250,7 +5251,7 @@ function DashboardContent() {
                       <div className="p-4 border-b border-gray-200 flex items-center gap-3 flex-shrink-0 bg-white">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden">
                           {activeConversation.partner.avatar ? (
-                            <img src={activeConversation.partner.avatar.startsWith('http') ? activeConversation.partner.avatar : `http://localhost:5000${activeConversation.partner.avatar}`} alt="" className="w-10 h-10 rounded-full object-cover" />
+                            <img src={activeConversation.partner.avatar.startsWith('http') ? activeConversation.partner.avatar : `${API_BASE_URL}${activeConversation.partner.avatar}`} alt="" className="w-10 h-10 rounded-full object-cover" />
                           ) : (
                             <span className="text-gray-600 font-medium">{activeConversation.partner.name?.charAt(0)}</span>
                           )}
@@ -5634,7 +5635,7 @@ function DashboardContent() {
                     if (showRedDot) {
                       try {
                         const token = localStorage.getItem('token');
-                        await fetch(`http://localhost:5000/api/collaboration-requests/${request.id}/mark-viewed`, {
+                        await fetch(`${API_BASE_URL}/api/collaboration-requests/${request.id}/mark-viewed`, {
                           method: 'POST',
                           headers: { 'Authorization': `Bearer ${token}` }
                         });
@@ -5679,13 +5680,13 @@ function DashboardContent() {
                           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                             {userType === 'brand' ? (
                               request.creator?.avatar ? (
-                                <img src={`http://localhost:5000${request.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                                <img src={`${API_BASE_URL}${request.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <span className="text-lg font-semibold text-gray-400">{request.creator?.name?.[0]}</span>
                               )
                             ) : (
                               request.brand?.avatar ? (
-                                <img src={`http://localhost:5000${request.brand.avatar}`} alt="" className="w-full h-full object-cover" />
+                                <img src={`${API_BASE_URL}${request.brand.avatar}`} alt="" className="w-full h-full object-cover" />
                               ) : (
                                 <span className="text-lg font-semibold text-gray-400">{request.brand?.name?.[0]}</span>
                               )
@@ -5912,13 +5913,13 @@ function DashboardContent() {
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                   {userType === 'brand' ? (
                     selectedCollabRequest.creator?.avatar ? (
-                      <img src={`http://localhost:5000${selectedCollabRequest.creator.avatar}`} alt="" className="w-full h-full object-cover" />
+                      <img src={`${API_BASE_URL}${selectedCollabRequest.creator.avatar}`} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg font-semibold text-gray-400">{selectedCollabRequest.creator?.name?.[0]}</span>
                     )
                   ) : (
                     selectedCollabRequest.brand?.avatar ? (
-                      <img src={`http://localhost:5000${selectedCollabRequest.brand.avatar}`} alt="" className="w-full h-full object-cover" />
+                      <img src={`${API_BASE_URL}${selectedCollabRequest.brand.avatar}`} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg font-semibold text-gray-400">{selectedCollabRequest.brand?.name?.[0]}</span>
                     )
@@ -6097,7 +6098,7 @@ function DashboardContent() {
                                     setConfirmingVideoPost(true);
                                     try {
                                       const token = localStorage.getItem('token');
-                                      const res = await fetch(`http://localhost:5000/api/collaboration-requests/${selectedCollabRequest.id}/video-posted`, {
+                                      const res = await fetch(`${API_BASE_URL}/api/collaboration-requests/${selectedCollabRequest.id}/video-posted`, {
                                         method: 'POST',
                                         headers: { 'Authorization': `Bearer ${token}` }
                                       });
@@ -6164,7 +6165,7 @@ function DashboardContent() {
                                     setUndoingVideoPost(true);
                                     try {
                                       const token = localStorage.getItem('token');
-                                      const res = await fetch(`http://localhost:5000/api/collaboration-requests/${selectedCollabRequest.id}/video-undo`, {
+                                      const res = await fetch(`${API_BASE_URL}/api/collaboration-requests/${selectedCollabRequest.id}/video-undo`, {
                                         method: 'POST',
                                         headers: { 'Authorization': `Bearer ${token}` }
                                       });
@@ -6271,7 +6272,7 @@ function DashboardContent() {
                                 setMarkingCompleted(true);
                                 try {
                                   const token = localStorage.getItem('token');
-                                  const res = await fetch(`http://localhost:5000/api/collaboration-requests/${selectedCollabRequest.id}/mark-completed`, {
+                                  const res = await fetch(`${API_BASE_URL}/api/collaboration-requests/${selectedCollabRequest.id}/mark-completed`, {
                                     method: 'POST',
                                     headers: { 'Authorization': `Bearer ${token}` }
                                   });
@@ -6413,7 +6414,7 @@ function DashboardContent() {
                       <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Images ({selectedCollabRequest.ad.images.length})</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedCollabRequest.ad.images.map((img: string, idx: number) => {
-                          const fullUrl = `http://localhost:5000${img}`;
+                          const fullUrl = `${API_BASE_URL}${img}`;
                           const isSelected = selectedMediaForDownload.has(fullUrl);
                           return (
                             <div key={idx} className="relative group w-24 h-24">
@@ -6463,7 +6464,7 @@ function DashboardContent() {
                       <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Videos ({selectedCollabRequest.ad.videos.length})</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedCollabRequest.ad.videos.map((vid: string, idx: number) => {
-                          const fullUrl = `http://localhost:5000${vid}`;
+                          const fullUrl = `${API_BASE_URL}${vid}`;
                           const isSelected = selectedMediaForDownload.has(fullUrl);
                           return (
                             <div key={idx} className="relative group w-36 h-24">

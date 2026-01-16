@@ -34,6 +34,7 @@ import {
   X,
 } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/config/api';
 
 // Platform icon component
 const PlatformIcon = ({ platform, className = "w-4 h-4" }: { platform: string; className?: string }) => {
@@ -204,7 +205,7 @@ export default function CompleteCollaborationPage() {
   const fetchCollabRequest = async (authToken: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
@@ -256,7 +257,7 @@ export default function CompleteCollaborationPage() {
 
     try {
       // First, attach the ad to the collaboration request
-      const attachResponse = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/attach-ad`, {
+      const attachResponse = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/attach-ad`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +274,7 @@ export default function CompleteCollaborationPage() {
       }
 
       // Initialize payment with Paystack
-      const initResponse = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/pay/initialize`, {
+      const initResponse = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/pay/initialize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -313,7 +314,7 @@ export default function CompleteCollaborationPage() {
         setShowCheckoutModal(true);
 
         try {
-          const response = await fetch(`http://localhost:5000/api/collaboration-requests/${requestId}/pay/verify`, {
+          const response = await fetch(`${API_BASE_URL}/api/collaboration-requests/${requestId}/pay/verify`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -466,7 +467,7 @@ export default function CompleteCollaborationPage() {
                       <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
                         {collabRequest.creator.avatar ? (
                           <img
-                            src={`http://localhost:5000${collabRequest.creator.avatar}`}
+                            src={`${API_BASE_URL}${collabRequest.creator.avatar}`}
                             alt={collabRequest.creator.name}
                             className="w-full h-full object-cover"
                           />
@@ -533,7 +534,7 @@ export default function CompleteCollaborationPage() {
                           <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                             {selectedAd.images && selectedAd.images.length > 0 ? (
                               <img
-                                src={`http://localhost:5000${selectedAd.images[0]}`}
+                                src={`${API_BASE_URL}${selectedAd.images[0]}`}
                                 alt={selectedAd.title}
                                 className="w-full h-full object-cover"
                               />
@@ -601,7 +602,7 @@ export default function CompleteCollaborationPage() {
                         <div className="w-24 h-24 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
                           {selectedAd.images && selectedAd.images.length > 0 ? (
                             <img
-                              src={`http://localhost:5000${selectedAd.images[0]}`}
+                              src={`${API_BASE_URL}${selectedAd.images[0]}`}
                               alt={selectedAd.title}
                               className="w-full h-full object-cover"
                             />
@@ -642,7 +643,7 @@ export default function CompleteCollaborationPage() {
                       <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                         {collabRequest.creator.avatar ? (
                           <img
-                            src={`http://localhost:5000${collabRequest.creator.avatar}`}
+                            src={`${API_BASE_URL}${collabRequest.creator.avatar}`}
                             alt={collabRequest.creator.name}
                             className="w-full h-full object-cover"
                           />

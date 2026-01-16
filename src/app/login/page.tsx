@@ -2,10 +2,11 @@
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { API_BASE_URL } from '@/config/api';
 
 export default function Login() {
   const handleLogin = () => {
-    const authUrl = 'http://localhost:5000/auth/google';
+    const authUrl = `${API_BASE_URL}/auth/google`;
     window.location.href = authUrl;
   };
 

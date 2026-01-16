@@ -37,7 +37,7 @@
 //   const handleTypeSelect = async (type: 'CREATOR' | 'BRAND') => {
 //     setLoading(true);
 //     try {
-//       const response = await fetch('http://localhost:5000/api/user/type', {
+//       const response = await fetch(`${API_BASE_URL}/api/user/type`, {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -153,6 +153,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { User, Building2 } from 'lucide-react';
+import { API_BASE_URL } from '@/config/api';
 
 function decodeJWT(token: string) {
   try {
@@ -181,7 +182,7 @@ function SelectTypeContent() {
 
       const exchangeAuthCode = async () => {
         try {
-          const response = await fetch('http://localhost:5000/auth/exchange', {
+          const response = await fetch(`${API_BASE_URL}/auth/exchange`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: authCode }),
@@ -224,7 +225,7 @@ function SelectTypeContent() {
     setLoading(true);
     const currentToken = token || localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/user/type', {
+      const response = await fetch(`${API_BASE_URL}/api/user/type`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

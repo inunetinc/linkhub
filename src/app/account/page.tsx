@@ -22,6 +22,7 @@ import {
   Save,
 } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/config/api';
 
 const NICHES = [
   { value: 'TECH', label: 'Tech', category: 'Premium' },
@@ -110,7 +111,7 @@ export default function AccountPage() {
 
   const fetchProfileData = async (authToken: string, jwtUser?: any) => {
     try {
-      const response = await fetch('http://localhost:5000/api/user/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       if (response.ok) {
@@ -203,7 +204,7 @@ export default function AccountPage() {
         formDataToSend.append('logo', logoFile);
       }
 
-      const response = await fetch('http://localhost:5000/api/user/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formDataToSend,

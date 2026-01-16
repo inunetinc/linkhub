@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/config/api';
 
 interface BlogPost {
   id: string;
@@ -60,7 +61,7 @@ export default function DashboardBlogPage() {
       if (selectedCategory) params.append('category', selectedCategory);
       params.append('limit', '12');
 
-      const res = await fetch(`http://localhost:5000/api/blog?${params}`);
+      const res = await fetch(`${API_BASE_URL}/api/blog?${params}`);
       const data = await res.json();
       setPosts(data.posts || []);
       setTotal(data.total || 0);
@@ -73,7 +74,7 @@ export default function DashboardBlogPage() {
 
   const fetchFeaturedPosts = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/blog?featured=true&limit=3');
+      const res = await fetch(`${API_BASE_URL}/api/blog?featured=true&limit=3`);
       const data = await res.json();
       setFeaturedPosts(data.posts || []);
     } catch (error) {
@@ -83,7 +84,7 @@ export default function DashboardBlogPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/blog-categories');
+      const res = await fetch(`${API_BASE_URL}/api/blog-categories`);
       const data = await res.json();
       setCategories(data || []);
     } catch (error) {
@@ -196,7 +197,7 @@ export default function DashboardBlogPage() {
                     <div className="aspect-[16/10] overflow-hidden bg-gray-100">
                       {post.coverImage ? (
                         <img
-                          src={`http://localhost:5000${post.coverImage}`}
+                          src={`${API_BASE_URL}${post.coverImage}`}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
@@ -268,7 +269,7 @@ export default function DashboardBlogPage() {
                     <div className="aspect-[16/10] overflow-hidden bg-gray-100">
                       {post.coverImage ? (
                         <img
-                          src={`http://localhost:5000${post.coverImage}`}
+                          src={`${API_BASE_URL}${post.coverImage}`}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />

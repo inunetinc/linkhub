@@ -37,6 +37,7 @@ import {
   Shield,
 } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/config/api';
 
 // Platform icon component
 const PlatformIcon = ({ platform, className = "w-4 h-4" }: { platform: string; className?: string }) => {
@@ -217,7 +218,7 @@ export default function CampaignBuilderPage() {
       setVideoDuration(null);
       setLoadingVideoDuration(false);
     };
-    video.src = `http://localhost:5000${videoPath}`;
+    video.src = `${API_BASE_URL}${videoPath}`;
   };
 
   const loadCart = () => {
@@ -232,7 +233,7 @@ export default function CampaignBuilderPage() {
   const fetchAds = async (token: string) => {
     try {
       setLoadingAds(true);
-      const response = await fetch('http://localhost:5000/api/ads', {
+      const response = await fetch(`${API_BASE_URL}/api/ads`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -356,7 +357,7 @@ export default function CampaignBuilderPage() {
         }));
 
       // Initialize payment with Paystack
-      const response = await fetch('http://localhost:5000/api/checkout/initialize', {
+      const response = await fetch(`${API_BASE_URL}/api/checkout/initialize`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -404,7 +405,7 @@ export default function CampaignBuilderPage() {
         setShowCheckoutModal(true);
 
         try {
-          const response = await fetch('http://localhost:5000/api/checkout/verify', {
+          const response = await fetch(`${API_BASE_URL}/api/checkout/verify`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -607,7 +608,7 @@ export default function CampaignBuilderPage() {
                             <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                               {group.creatorAvatar ? (
                                 <img
-                                  src={`http://localhost:5000${group.creatorAvatar}`}
+                                  src={`${API_BASE_URL}${group.creatorAvatar}`}
                                   alt={group.creatorName}
                                   className="w-full h-full object-cover"
                                 />
@@ -769,7 +770,7 @@ export default function CampaignBuilderPage() {
                                 <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                                   {ad.images.length > 0 ? (
                                     <img
-                                      src={`http://localhost:5000${ad.images[0]}`}
+                                      src={`${API_BASE_URL}${ad.images[0]}`}
                                       alt={ad.title}
                                       className="w-full h-full object-cover"
                                     />
@@ -1021,7 +1022,7 @@ export default function CampaignBuilderPage() {
                           <div className="w-24 h-24 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
                             {selectedAd.images.length > 0 ? (
                               <img
-                                src={`http://localhost:5000${selectedAd.images[0]}`}
+                                src={`${API_BASE_URL}${selectedAd.images[0]}`}
                                 alt={selectedAd.title}
                                 className="w-full h-full object-cover"
                               />
@@ -1066,7 +1067,7 @@ export default function CampaignBuilderPage() {
                               <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                                 {group.creatorAvatar ? (
                                   <img
-                                    src={`http://localhost:5000${group.creatorAvatar}`}
+                                    src={`${API_BASE_URL}${group.creatorAvatar}`}
                                     alt={group.creatorName}
                                     className="w-full h-full object-cover"
                                   />
