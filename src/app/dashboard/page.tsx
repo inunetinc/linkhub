@@ -1237,8 +1237,22 @@ function DashboardContent() {
       }
 
       if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || 'Failed to save ad');
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const err = await response.json();
+          throw new Error(err.error || 'Failed to save ad');
+        } else {
+          // Server returned HTML error page (likely file size limit or server error)
+          const text = await response.text();
+          console.error('Server returned non-JSON response:', text.substring(0, 200));
+          if (response.status === 413) {
+            throw new Error('File size too large. Please upload smaller files.');
+          } else if (response.status === 404) {
+            throw new Error('API endpoint not found. Please check your configuration.');
+          } else {
+            throw new Error(`Server error (${response.status}). Please try again or upload smaller files.`);
+          }
+        }
       }
 
       // Reset form
