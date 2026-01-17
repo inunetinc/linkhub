@@ -1133,15 +1133,43 @@ function DashboardContent() {
       const talkingPoints = formData.get('talkingPoints') as string;
       const guidelines = formData.get('guidelines') as string;
 
-      if (!title) {
-        throw new Error('Title is required');
+      // Validate all required fields
+      if (!title || !title.trim()) {
+        throw new Error('Campaign Title is required');
+      }
+
+      if (!description || !description.trim()) {
+        throw new Error('Description is required');
+      }
+
+      if (!talkingPoints || !talkingPoints.trim()) {
+        throw new Error('Talking Points are required');
+      }
+
+      if (!guidelines || !guidelines.trim()) {
+        throw new Error('Brand Guidelines are required');
+      }
+
+      if (selectedNiches.length === 0) {
+        throw new Error('Please select at least one target niche');
+      }
+
+      // Check for media files - must have at least one image or video
+      const hasExistingMedia = editingAd && (
+        (editingAd.images?.length > 0 && editingAd.images.some((img: string) => !imagesToRemove.includes(img))) ||
+        (editingAd.videos?.length > 0 && editingAd.videos.some((vid: string) => !videosToRemove.includes(vid)))
+      );
+      const hasNewMedia = adImages.length > 0 || adVideos.length > 0;
+
+      if (!hasExistingMedia && !hasNewMedia) {
+        throw new Error('Please upload at least one image or video');
       }
 
       const submitData = new FormData();
-      submitData.append('title', title);
-      if (description) submitData.append('description', description);
-      if (talkingPoints) submitData.append('talkingPoints', talkingPoints);
-      if (guidelines) submitData.append('guidelines', guidelines);
+      submitData.append('title', title.trim());
+      submitData.append('description', description.trim());
+      submitData.append('talkingPoints', talkingPoints.trim());
+      submitData.append('guidelines', guidelines.trim());
       submitData.append('targetNiches', JSON.stringify(selectedNiches));
       submitData.append('scriptRequired', String(scriptRequired));
 
@@ -3608,19 +3636,20 @@ function DashboardContent() {
 
                     {/* Description */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Description <span className="text-red-500">*</span></label>
                       <textarea
                         name="description"
                         rows={3}
                         defaultValue={editingAd?.description || ''}
                         placeholder="Describe your campaign objectives and what you're looking for..."
                         className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900 placeholder-gray-500 resize-none"
+                        required
                       />
                     </div>
 
                     {/* Target Niches */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Target Creator Niches</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Target Creator Niches <span className="text-red-500">*</span></label>
                       <div className="flex flex-wrap gap-2">
                         {nicheOptions.map(niche => (
                           <button
@@ -3647,7 +3676,7 @@ function DashboardContent() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         <FileText className="inline w-4 h-4 mr-1" />
-                        Talking Points
+                        Talking Points <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         name="talkingPoints"
@@ -3655,24 +3684,27 @@ function DashboardContent() {
                         defaultValue={editingAd?.talkingPoints || ''}
                         placeholder="What should creators mention or highlight?&#10;• Key product features&#10;• Discount codes&#10;• Call-to-action"
                         className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900 placeholder-gray-500 resize-none"
+                        required
                       />
                     </div>
 
                     {/* Guidelines */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Brand Guidelines</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Brand Guidelines <span className="text-red-500">*</span></label>
                       <textarea
                         name="guidelines"
                         rows={3}
                         defaultValue={editingAd?.guidelines || ''}
                         placeholder="Any specific requirements, do's and don'ts, brand voice guidelines..."
                         className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900 placeholder-gray-500 resize-none"
+                        required
                       />
                     </div>
 
                     {/* Media Upload - Compact Grid */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Media Files</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Media Files <span className="text-red-500">*</span></label>
+                      <p className="text-xs text-gray-500 mb-3">Upload at least one image or video</p>
                       <div className="flex gap-3">
                         {/* Image Upload */}
                         <div className="flex-1">
