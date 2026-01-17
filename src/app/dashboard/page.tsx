@@ -161,6 +161,9 @@ function DashboardContent() {
   const [combinedVideoOrder, setCombinedVideoOrder] = useState<any[] | null>(null);
   // Script required for image-only ads (creator needs to speak/narrate)
   const [scriptRequired, setScriptRequired] = useState<boolean>(false);
+  // Delete ad modal state
+  const [deleteAdId, setDeleteAdId] = useState<string | null>(null);
+  const [isDeletingAd, setIsDeletingAd] = useState(false);
 
   // Messaging states
   const [conversations, setConversations] = useState<any[]>([]);
@@ -1315,20 +1318,31 @@ function DashboardContent() {
     }
   };
 
-  // Handle ad deletion
-  const handleDeleteAd = async (adId: string) => {
-    if (!confirm('Are you sure you want to delete this ad?')) return;
+  // Handle ad deletion - now uses modal
+  const handleDeleteAd = (adId: string) => {
+    setDeleteAdId(adId);
+  };
+
+  // Confirm ad deletion
+  const confirmDeleteAd = async () => {
+    if (!deleteAdId) return;
+    setIsDeletingAd(true);
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/ads/${adId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/ads/${deleteAdId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
-        setAds(prev => prev.filter(ad => ad.id !== adId));
+        setAds(prev => prev.filter(ad => ad.id !== deleteAdId));
+        setDeleteAdId(null);
+        setSuccessToast('Ad deleted successfully!');
+        setTimeout(() => setSuccessToast(null), 1500);
       }
     } catch (err) {
       console.error('Failed to delete ad:', err);
+    } finally {
+      setIsDeletingAd(false);
     }
   };
 
@@ -6752,6 +6766,63 @@ function DashboardContent() {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* Delete Ad Confirmation Modal */}
+      {deleteAdId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => !isDeletingAd && setDeleteAdId(null)}
+          />
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="relative bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6"
+          >
+            <div className="text-center">
+              {/* Warning Icon */}
+              <div className="w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Delete Ad
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete this ad? This action cannot be undone.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteAdId(null)}
+                  disabled={isDeletingAd}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteAd}
+                  disabled={isDeletingAd}
+                  className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isDeletingAd ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    'Delete'
+                  )}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       )}
 
       {/* Success Toast */}
