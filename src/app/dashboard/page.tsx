@@ -1303,7 +1303,11 @@ function DashboardContent() {
 
       // Refresh ads list
       fetchAds();
-      alert(editingAd ? 'Ad updated successfully!' : 'Ad created successfully!');
+      setSuccessToast(editingAd ? 'Ad updated successfully!' : 'Ad created successfully!');
+      setTimeout(() => {
+        setSuccessToast(null);
+        setActiveView('my-ads');
+      }, 1500);
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
