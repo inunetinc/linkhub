@@ -1710,16 +1710,8 @@ function DashboardContent() {
                   </div>
 
                   {adsLoading ? (
-                    <div className="space-y-3">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl animate-pulse">
-                          <div className="w-14 h-10 bg-gray-200 rounded-lg flex-shrink-0" />
-                          <div className="flex-1">
-                            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                            <div className="h-3 bg-gray-100 rounded w-1/2" />
-                          </div>
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-center py-8">
+                      <div className="w-6 h-6 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : ads.length === 0 ? (
                     <div className="text-center py-8">
@@ -4141,17 +4133,8 @@ function DashboardContent() {
             </div>
 
             {adsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-3xl overflow-hidden border border-gray-100 animate-pulse">
-                    <div className="aspect-video bg-gray-200" />
-                    <div className="p-5">
-                      <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-3" />
-                      <div className="h-4 bg-gray-100 rounded-lg w-full mb-2" />
-                      <div className="h-4 bg-gray-100 rounded-lg w-2/3" />
-                    </div>
-                  </div>
-                ))}
+              <div className="flex items-center justify-center py-20">
+                <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : ads.length === 0 ? (
               <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-3xl p-16 text-center">
